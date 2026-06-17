@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { TaskSchema } from "../models/entity/Task.js";
 import { UserSchema } from "../models/entity/User.js";
+import { RefreshTokenSchema } from "../models/entity/RefreshToken.js";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ const AppDataSource = new DataSource({
     synchronize: true,   // Tự đồng bộ schema → DB (chỉ dùng trong dev)
     logging: true,        // Log SQL queries ra console
     // Import trực tiếp entity schemas (đáng tin cậy hơn glob pattern với ESM)
-    entities: [TaskSchema, UserSchema],
+    entities: [TaskSchema, UserSchema, RefreshTokenSchema],
     // pool size tương đương config cũ
     extra: {
         max: 20,

@@ -4,9 +4,9 @@ import * as taskRepository from "../repository/taskRepository.js";
  * GET ALL - Lấy tất cả nhiệm vụ
  * Xử lý business logic: validate, transform dữ liệu nếu cần
  */
-export const getAllTasks = async () => {
+export const getAllTasks = async (userId) => {
     try {
-        const tasks = await taskRepository.getAllTasks();
+        const tasks = await taskRepository.getAllTasks(userId);
         return tasks;
     } catch (error) {
         throw new Error(error.message);
@@ -17,12 +17,12 @@ export const getAllTasks = async () => {
  * GET BY ID - Lấy nhiệm vụ theo ID
  * Validate ID trước khi query database
  */
-export const getTaskById = async (id) => {
+export const getTaskById = async (id, userId) => {
     try {
         if (!id || isNaN(id)) {
             throw new Error("ID không hợp lệ");
         }
-        const task = await taskRepository.getTaskById(id);
+        const task = await taskRepository.getTaskById(id, userId);
         if (!task) {
             throw new Error("Nhiệm vụ không tồn tại");
         }
@@ -36,7 +36,7 @@ export const getTaskById = async (id) => {
  * CREATE - Tạo nhiệm vụ mới
  * Validate dữ liệu đầu vào trước khi lưu
  */
-export const createTask = async (title) => {
+export const createTask = async (title, userId) => {
     try {
         if (!title || title.trim() === "") {
             throw new Error("Tiêu đề không được để trống");
@@ -44,7 +44,7 @@ export const createTask = async (title) => {
         if (title.length > 255) {
             throw new Error("Tiêu đề không được vượt quá 255 ký tự");
         }
-        const task = await taskRepository.createTask(title);
+        const task = await taskRepository.createTask(title, userId);
         return task;
     } catch (error) {
         throw new Error(error.message);
@@ -55,13 +55,13 @@ export const createTask = async (title) => {
  * UPDATE - Cập nhật nhiệm vụ
  * Validate ID và dữ liệu, kiểm tra nhiệm vụ tồn tại
  */
-export const updateTask = async (id, title, status) => {
+export const updateTask = async (id, title, status, userId) => {
     try {
         if (!id || isNaN(id)) {
             throw new Error("ID không hợp lệ");
         }
         // Kiểm tra nhiệm vụ tồn tại
-        const existingTask = await taskRepository.getTaskById(id);
+        const existingTask = await taskRepository.getTaskById(id, userId);
         if (!existingTask) {
             throw new Error("Nhiệm vụ không tồn tại");
         }
@@ -80,7 +80,8 @@ export const updateTask = async (id, title, status) => {
         const task = await taskRepository.updateTask(
             id,
             title || existingTask.title,
-            status !== undefined ? status : existingTask.status
+            status !== undefined ? status : existingTask.status,
+            userId
         );
         return task;
     } catch (error) {
@@ -92,17 +93,17 @@ export const updateTask = async (id, title, status) => {
  * DELETE - Xóa nhiệm vụ
  * Validate ID và kiểm tra nhiệm vụ tồn tại trước xóa
  */
-export const deleteTask = async (id) => {
+export const deleteTask = async (id, userId) => {
     try {
         if (!id || isNaN(id)) {
             throw new Error("ID không hợp lệ");
         }
         // Kiểm tra nhiệm vụ tồn tại
-        const existingTask = await taskRepository.getTaskById(id);
+        const existingTask = await taskRepository.getTaskById(id, userId);
         if (!existingTask) {
             throw new Error("Nhiệm vụ không tồn tại");
         }
-        const task = await taskRepository.deleteTask(id);
+        const task = await taskRepository.deleteTask(id, userId);
         return task;
     } catch (error) {
         throw new Error(error.message);

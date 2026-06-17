@@ -6,7 +6,7 @@ import { toAPIResponse } from "../models/dto/APIResponse.js";
  */
 export const getAllTasks = async (req, res) => {
     try {
-        const tasks = await taskService.getAllTasks();
+        const tasks = await taskService.getAllTasks(req.user.id);
         res.status(200).json(
             toAPIResponse(200, "Lấy các nhiệm vụ thành công", tasks)
         );
@@ -23,7 +23,7 @@ export const getAllTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
     try {
         const { id } = req.params;
-        const task = await taskService.getTaskById(id);
+        const task = await taskService.getTaskById(id, req.user.id);
         res.status(200).json(
             toAPIResponse(200, "Lấy nhiệm vụ thành công", task)
         );
@@ -40,7 +40,7 @@ export const getTaskById = async (req, res) => {
 export const createTask = async (req, res) => {
     try {
         const { title } = req.body;
-        const task = await taskService.createTask(title);
+        const task = await taskService.createTask(title, req.user.id);
         res.status(201).json(
             toAPIResponse(201, "Tạo nhiệm vụ thành công", task)
         );
@@ -58,7 +58,7 @@ export const updateTask = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, status } = req.body;
-        const task = await taskService.updateTask(id, title, status);
+        const task = await taskService.updateTask(id, title, status, req.user.id);
         res.status(200).json(
             toAPIResponse(200, "Cập nhật nhiệm vụ thành công", task)
         );
@@ -75,7 +75,7 @@ export const updateTask = async (req, res) => {
 export const deleteTask = async (req, res) => {
     try {
         const { id } = req.params;
-        const task = await taskService.deleteTask(id);
+        const task = await taskService.deleteTask(id, req.user.id);
         res.status(200).json(
             toAPIResponse(200, "Xóa nhiệm vụ thành công", task)
         );

@@ -6,6 +6,7 @@ import {
     updateTask,
     deleteTask
 } from "../controllers/tasksController.js";
+import { jwtFilter } from "../config/security/jwtFilter.js";
 
 const router = express.Router();
 
@@ -19,6 +20,9 @@ const router = express.Router();
  * PUT    /api/tasks/:id       - Cập nhật nhiệm vụ
  * DELETE /api/tasks/:id       - Xóa nhiệm vụ
  */
+
+// Yêu cầu xác thực token cho toàn bộ route bên dưới
+router.use(jwtFilter);
 
 // GET - Lấy tất cả nhiệm vụ
 router.get("/", getAllTasks);

@@ -34,5 +34,11 @@ export const UserSchema = new EntitySchema({
             target: "Task",
             inverseSide: "user",   // Tên relation bên Task
         },
+        // 1 User có nhiều Refresh Tokens (OneToMany)
+        refreshTokens: {
+            type: "one-to-many",
+            target: "RefreshToken",
+            inverseSide: "user",
+        }
     },
 });

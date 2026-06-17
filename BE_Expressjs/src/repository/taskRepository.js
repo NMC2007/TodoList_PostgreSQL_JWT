@@ -5,33 +5,40 @@ import { TaskSchema } from "../models/entity/Task.js";
 const taskRepo = AppDataSource.getRepository(TaskSchema);
 
 /**
- * GET ALL - Lấy tất cả nhiệm vụ
+ * GET ALL - Lấy tất cả nhiệm vụ của user
  */
-export const getAllTasks = async () => {
+export const getAllTasks = async (userId) => {
     try {
-        return await taskRepo.find({ order: { id: "DESC" } });
+        return await taskRepo.find({ 
+            where: { user: { id: userId } },
+            order: { id: "DESC" } 
+        });
     } catch (error) {
         throw new Error("Lỗi khi lấy danh sách nhiệm vụ: " + error.message);
     }
 };
 
 /**
- * GET BY ID - Lấy nhiệm vụ theo ID
+ * GET BY ID - Lấy nhiệm vụ theo ID và User ID
  */
-export const getTaskById = async (id) => {
+export const getTaskById = async (id, userId) => {
     try {
-        return await taskRepo.findOneBy({ id: parseInt(id) });
+        return await taskRepo.findOneBy({ id: parseInt(id), user: { id: userId } });
     } catch (error) {
         throw new Error("Lỗi khi lấy nhiệm vụ: " + error.message);
     }
 };
 
 /**
- * CREATE - Tạo nhiệm vụ mới
+ * CREATE - Tạo nhiệm vụ mới cho User
  */
-export const createTask = async (title) => {
+export const createTask = async (title, userId) => {
     try {
-        const task = taskRepo.create({ title, status: false });
+        const task = taskRepo.create({ 
+            title, 
+            status: false,
+            user: { id: userId }
+        });
         return await taskRepo.save(task);
     } catch (error) {
         throw new Error("Lỗi khi tạo nhiệm vụ: " + error.message);
@@ -41,7 +48,7 @@ export const createTask = async (title) => {
 /**
  * UPDATE - Cập nhật nhiệm vụ
  */
-export const updateTask = async (id, title, status) => {
+export const updateTask = async (id, title, status, userId) => {
     try {
         const updateData = { update_at: new Date() };
 
@@ -55,8 +62,8 @@ export const updateTask = async (id, title, status) => {
             updateData.completed_at = status ? new Date() : null;
         }
 
-        await taskRepo.update(id, updateData);
-        return await taskRepo.findOneBy({ id: parseInt(id) });
+        await taskRepo.update({ id: parseInt(id), user: { id: userId } }, updateData);
+        return await taskRepo.findOneBy({ id: parseInt(id), user: { id: userId } });
     } catch (error) {
         throw new Error("Lỗi khi cập nhật nhiệm vụ: " + error.message);
     }
@@ -65,10 +72,12 @@ export const updateTask = async (id, title, status) => {
 /**
  * DELETE - Xóa nhiệm vụ
  */
-export const deleteTask = async (id) => {
+export const deleteTask = async (id, userId) => {
     try {
-        const task = await taskRepo.findOneBy({ id: parseInt(id) });
-        await taskRepo.delete(id);
+        const task = await taskRepo.findOneBy({ id: parseInt(id), user: { id: userId } });
+        if (task) {
+            await taskRepo.delete({ id: parseInt(id), user: { id: userId } });
+        }
         return task;
     } catch (error) {
         throw new Error("Lỗi khi xóa nhiệm vụ: " + error.message);
