@@ -4,9 +4,47 @@ import * as taskRepository from "../repository/taskRepository.js";
  * GET ALL - Lấy tất cả nhiệm vụ
  * Xử lý business logic: validate, transform dữ liệu nếu cần
  */
-export const getAllTasks = async (userId) => {
+export const getAllTasks = async (userId, filters = {}) => {
     try {
-        const tasks = await taskRepository.getAllTasks(userId);
+        const parsedFilters = {};
+
+        // Parse status
+        if (filters.status !== undefined && filters.status !== "") {
+            if (filters.status !== "true" && filters.status !== "false") {
+                throw new Error("Status phải là 'true' hoặc 'false'");
+            }
+            parsedFilters.status = filters.status === "true";
+        }
+
+        // Tính dateFrom dựa vào filter
+        const filterValue = filters.filter || "all";
+        const now = new Date();
+
+        switch (filterValue) {
+            case "today": {
+                const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                parsedFilters.dateFrom = start;
+                break;
+            }
+            case "week": {
+                const day = now.getDay();
+                const diff = day === 0 ? 6 : day - 1; // Thứ 2 = đầu tuần
+                const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diff);
+                parsedFilters.dateFrom = start;
+                break;
+            }
+            case "month": {
+                const start = new Date(now.getFullYear(), now.getMonth(), 1);
+                parsedFilters.dateFrom = start;
+                break;
+            }
+            case "all":
+                break; // Không filter thời gian
+            default:
+                throw new Error("Filter phải là 'today', 'week', 'month' hoặc 'all'");
+        }
+
+        const tasks = await taskRepository.getAllTasks(userId, parsedFilters);
         return tasks;
     } catch (error) {
         throw new Error(error.message);

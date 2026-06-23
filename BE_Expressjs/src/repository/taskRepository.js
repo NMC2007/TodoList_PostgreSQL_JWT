@@ -7,12 +7,27 @@ const taskRepo = AppDataSource.getRepository(TaskSchema);
 /**
  * GET ALL - Lấy tất cả nhiệm vụ của user
  */
-export const getAllTasks = async (userId) => {
+export const getAllTasks = async (userId, filters = {}) => {
     try {
-        return await taskRepo.find({ 
-            where: { user: { id: userId } },
-            order: { id: "DESC" } 
-        });
+        const queryBuilder = taskRepo.createQueryBuilder("task")
+            .where("task.user_id = :userId", { userId })
+            .orderBy("task.created_at", "DESC");
+
+        // Lọc theo trạng thái
+        if (filters.status !== undefined) {
+            queryBuilder.andWhere("task.status = :status", { 
+                status: filters.status 
+            });
+        }
+
+        // Lọc theo khoảng thời gian
+        if (filters.dateFrom) {
+            queryBuilder.andWhere("task.created_at >= :dateFrom", { 
+                dateFrom: filters.dateFrom 
+            });
+        }
+
+        return await queryBuilder.getMany();
     } catch (error) {
         throw new Error("Lỗi khi lấy danh sách nhiệm vụ: " + error.message);
     }

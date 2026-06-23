@@ -6,7 +6,8 @@ import { toAPIResponse } from "../models/dto/APIResponse.js";
  */
 export const getAllTasks = async (req, res) => {
     try {
-        const tasks = await taskService.getAllTasks(req.user.id);
+        const { filter, status } = req.query;
+        const tasks = await taskService.getAllTasks(req.user.id, { filter, status });
         res.status(200).json(
             toAPIResponse(200, "Lấy các nhiệm vụ thành công", tasks)
         );
