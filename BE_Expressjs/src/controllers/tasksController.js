@@ -6,10 +6,10 @@ import { toAPIResponse } from "../models/dto/APIResponse.js";
  */
 export const getAllTasks = async (req, res) => {
     try {
-        const { filter, status } = req.query;
-        const tasks = await taskService.getAllTasks(req.user.id, { filter, status });
+        const { filter, status, page, limit } = req.query;
+        const result = await taskService.getAllTasks(req.user.id, { filter, status, page, limit });
         res.status(200).json(
-            toAPIResponse(200, "Lấy các nhiệm vụ thành công", tasks)
+            toAPIResponse(200, "Lấy các nhiệm vụ thành công", result)
         );
     } catch (error) {
         res.status(500).json(

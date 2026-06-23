@@ -1,15 +1,4 @@
-const TIME_FILTERS = [
-    { label: 'Tất cả', value: 'all' },
-    { label: 'Hôm nay', value: 'today' },
-    { label: 'Tuần này', value: 'week' },
-    { label: 'Tháng này', value: 'month' },
-];
-
-const STATUS_FILTERS = [
-    { label: 'Tất cả', value: '' },
-    { label: 'Hoàn thành', value: 'true' },
-    { label: 'Chưa làm', value: 'false' },
-];
+import { TIME_FILTERS, STATUS_FILTERS } from '../data';
 
 const TaskFilter = ({ filters, onChange }) => {
     const setFilter = (key, value) => {

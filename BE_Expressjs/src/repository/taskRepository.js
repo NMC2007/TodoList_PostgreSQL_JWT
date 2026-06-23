@@ -7,7 +7,7 @@ const taskRepo = AppDataSource.getRepository(TaskSchema);
 /**
  * GET ALL - Lấy tất cả nhiệm vụ của user
  */
-export const getAllTasks = async (userId, filters = {}) => {
+export const getAllTasks = async (userId, filters = {}, pagination = {}) => {
     try {
         const queryBuilder = taskRepo.createQueryBuilder("task")
             .where("task.user_id = :userId", { userId })
@@ -27,7 +27,23 @@ export const getAllTasks = async (userId, filters = {}) => {
             });
         }
 
-        return await queryBuilder.getMany();
+        const page = pagination.page || 1;
+        const limit = pagination.limit || 10;
+        const skip = (page - 1) * limit;
+
+        queryBuilder.skip(skip).take(limit);
+
+        const [tasks, total] = await queryBuilder.getManyAndCount();
+        
+        return {
+            tasks,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit),
+            }
+        };
     } catch (error) {
         throw new Error("Lỗi khi lấy danh sách nhiệm vụ: " + error.message);
     }

@@ -44,8 +44,16 @@ export const getAllTasks = async (userId, filters = {}) => {
                 throw new Error("Filter phải là 'today', 'week', 'month' hoặc 'all'");
         }
 
-        const tasks = await taskRepository.getAllTasks(userId, parsedFilters);
-        return tasks;
+        const pagination = {
+            page: parseInt(filters.page) || 1,
+            limit: parseInt(filters.limit) || 10,
+        };
+
+        if (pagination.page < 1) pagination.page = 1;
+        if (pagination.limit < 1 || pagination.limit > 50) pagination.limit = 10;
+
+        const result = await taskRepository.getAllTasks(userId, parsedFilters, pagination);
+        return result;
     } catch (error) {
         throw new Error(error.message);
     }
