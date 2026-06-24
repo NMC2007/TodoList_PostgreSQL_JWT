@@ -6,9 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
-
-// Tạm thời placeholder cho Dashboard
-const DashboardPlaceholder = () => <div className="p-8 text-center"><h1 className="text-2xl font-bold">Dashboard (Đang xây dựng)</h1></div>;
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
@@ -23,7 +21,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<DashboardPlaceholder />} />
+              <Route path="/" element={<DashboardPage />} />
             </Route>
             
             <Route path="*" element={<NotFoundPage />} />

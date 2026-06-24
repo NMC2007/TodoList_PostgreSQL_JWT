@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Trash2, Check, Pencil, X } from 'lucide-react';
+import { Trash2, Check, Pencil } from 'lucide-react';
 
 const formatDate = (dateStr) => {
     if (!dateStr) return null;
@@ -43,12 +43,12 @@ const TaskCard = ({ task, onToggle, onUpdate, onDelete }) => {
     };
 
     return (
-        <div className={`group glass-panel px-4 py-3.5 flex items-start gap-3 transition-all duration-200 ${task.status ? 'opacity-60' : ''}`}>
+        <div className={`group glass-panel px-4 py-3.5 flex items-center gap-3 transition-all duration-200 ${task.status ? 'opacity-60' : ''}`}>
             {/* Checkbox */}
             <button
                 onClick={() => onToggle(task.id, !task.status)}
                 aria-label={task.status ? 'Đánh dấu chưa làm' : 'Đánh dấu hoàn thành'}
-                className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-200 ${
                     task.status
                         ? 'bg-indigo-500 border-indigo-500'
                         : 'border-slate-300 dark:border-slate-600 hover:border-indigo-400'
@@ -60,21 +60,14 @@ const TaskCard = ({ task, onToggle, onUpdate, onDelete }) => {
             {/* Content */}
             <div className="flex-1 min-w-0">
                 {isEditing ? (
-                    <div className="flex items-center gap-2">
-                        <input
-                            ref={inputRef}
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            className="input-field py-1 text-sm flex-1"
-                        />
-                        <button onClick={handleConfirmEdit} className="text-indigo-500 hover:text-indigo-600 p-1">
-                            <Check size={16} />
-                        </button>
-                        <button onClick={handleCancelEdit} className="text-slate-400 hover:text-slate-600 p-1">
-                            <X size={16} />
-                        </button>
-                    </div>
+                    <input
+                        ref={inputRef}
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        onBlur={handleConfirmEdit}
+                        className="input-field py-1 text-sm w-full"
+                    />
                 ) : (
                     <p
                         onDoubleClick={handleStartEdit}

@@ -7,11 +7,11 @@
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --border-color: #e2e8f0;
-  
+
   --accent-light: #818cf8;
   --accent-main: #6366f1;
   --accent-dark: #4f46e5;
-  
+
   --success: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
@@ -28,11 +28,11 @@
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --border-color: #334155;
-  
+
   --accent-light: #a78bfa;
   --accent-main: #818cf8;
   --accent-dark: #6366f1;
-  
+
   --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
   --glass-bg: rgba(30, 41, 59, 0.7);
   --glass-border: rgba(148, 163, 184, 0.1);
@@ -42,12 +42,21 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg-main);
   background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
-                    radial-gradient(at 100% 100%, rgba(168, 139, 250, 0.1) 0px, transparent 50%);
+    radial-gradient(at 100% 100%, rgba(168, 139, 250, 0.1) 0px, transparent 50%);
   color: var(--text-primary);
   min-height: 100vh;
   margin: 0;
   transition: background-color 0.3s ease, color 0.3s ease;
   background-attachment: fixed;
+}
+
+/* Global button cursor */
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 /* Glassmorphism Classes */
@@ -78,6 +87,11 @@ body {
   color: var(--text-primary);
   transition: all 0.2s ease;
   outline: none;
+  cursor: pointer;
+}
+
+.input-field:focus {
+  cursor: text;
 }
 
 .input-field:focus {
@@ -111,20 +125,33 @@ body {
 }
 
 .btn-primary:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+  filter: brightness(0.7);
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -133,4 +160,133 @@ body {
 
 .animate-slide-up {
   animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Secondary Button — dùng cho nút "Huỷ" */
+.btn-ghost {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-main);
+  color: var(--text-primary);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: brightness(0.7);
+}
+
+/* Danger Button — dùng cho nút "Xoá" */
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  filter: brightness(0.7);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--accent-main), #a78bfa);
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Scale-in Animation — dùng cho dialog */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+/* Custom Scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-secondary);
 }
