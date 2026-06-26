@@ -14,7 +14,7 @@ const app = express();
 // Middleware
 app.use(express.json());  // ← Thêm để parse JSON
 
-app.use(cors({ origin: ["http://localhost:5173"] }))
+app.use(cors({ origin: [process.env.FE_PORT || "http://localhost:5173"] }))
 
 // puplic routers
 app.use("/api/auth", authRouter)
